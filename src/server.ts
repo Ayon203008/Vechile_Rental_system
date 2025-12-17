@@ -1,13 +1,11 @@
 import express, { Request, Response } from "express";
 import { Pool } from "pg";
 const app = express();
-import dotenv from 'dotenv'
-import path from "path"
-
+import dotenv from "dotenv";
+import path from "path";
 
 const port = 3000;
-dotenv.config({path:path.join(process.cwd(),".env")})
-
+dotenv.config({ path: path.join(process.cwd(), ".env") });
 
 //middleware
 app.use(express.json());
@@ -33,6 +31,7 @@ const initDB = async () => {
         CREATE TABLE IF NOT EXISTS  vechiles(
         id SERIAL PRIMARY KEY,
         vechile_name VARCHAR(100) NOT NULL,
+        type VARCHAR(30) NOT NULL CHECK(type IN ('car','bike','van','SUV')),
         registration_number VARCHAR(100) UNIQUE NOT NULL,
         daily_rent_price NUMERIC(10,2) NOT NULL CHECK(daily_rent_price>0),
         availability_status VARCHAR(50) NOT NULL DEFAULT 'available'
@@ -58,13 +57,39 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello from vechile Rental system");
 });
 
-//POST Method
-app.post("/api/v1/vehicles", (req: Request, res: Response) => {
-  console.log(req);
-  res.status(201).json({
-    success: true,
-    message: "Api is working perfectly",
-  });
+//POST Method VECHILE
+app.post("/api/v1/vehicles", async (req: Request, res: Response) => {
+  const {
+    vechile_name,
+    type,
+    registration_number,
+    daily_rent_price,
+    availability_status,
+  } = req.body;
+  try {
+    const result = await pool.query(
+      `INSERT INTO vechiles(vechile_name,type ,registration_number,daily_rent_price,availability_status)
+        VALUES ($1,$2,$3,$4,$5)
+        `,
+      [
+        vechile_name,
+        type,
+        registration_number,
+        daily_rent_price,
+        availability_status,
+      ]
+    );
+    res.status(201).json({
+      success: true,
+      message: "Vehicle added successfully",
+      vehicle: result.rows[0],
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      success: "False",
+      message: err.message,
+    });
+  }
 });
 
 app.listen(port, () => {
