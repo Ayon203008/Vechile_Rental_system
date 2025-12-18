@@ -25,7 +25,7 @@ const GetUser=async()=>{
 
 const UpdateUser = async(name:string, email:string, password:string, phone:string,userId:string)=>{
 const result = await pool.query(
-      `UPDATE  users SET name=$1,email=$2,password=$3,phone=$4,  WHERE id=$5 RETURNING *`,
+      `UPDATE  users SET name=$1,email=$2,password=$3,phone=$4 WHERE id=$5 RETURNING *`,
       [name, email, password, phone,userId]
     );
     return result
