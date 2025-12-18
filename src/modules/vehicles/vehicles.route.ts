@@ -5,14 +5,16 @@ import { vehiclesController } from "./vehicles.controller";
 
 const router = express.Router()
 
-// post the vehicles data to the backend
 router.post("/", vehiclesController.postVehicles);
-
-// get the vehicles data
 
 router.get("/", vehiclesController.getAllVehicles);
 
+router.get('/:vehicleId',vehiclesController.getSingleVehicle)
+
+router.put('/:vehicleId',vehiclesController.UpdateVehicle)
+
+router.delete('/:vehicleId',vehiclesController.DeleteVehicle)
 
 
 
-export const UserRoutes = router
+export const VehicleRoutes = router
