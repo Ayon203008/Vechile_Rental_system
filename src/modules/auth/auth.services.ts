@@ -12,15 +12,17 @@ const LoginUser = async (email: string, password: string) => {
   }
 
   const user = result.rows[0]
-  const match = bcrypt.compare(password,user.password)
+  const match =await bcrypt.compare(password,user.password)
 
   if(!match){
     return false
   }
 
   const token = jwt.sign({
+    id:user.id,
     name:user.name,
     email:user.email,
+    role:user.role
   },config.jwtsecret as string,{
     expiresIn:"30d"
   })

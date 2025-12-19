@@ -8,7 +8,7 @@ router.post("/",userController.createUser)
 
 router.get("/",logger,auth("admin"),userController.getUser)
 
-router.put("/:userId",userController.updateUser)
+router.put("/:userId",auth("admin","customer"),userController.updateUser)
 
 router.delete("/:userId",auth('admin'),userController.deleteUser)
 

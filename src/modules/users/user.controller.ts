@@ -36,10 +36,24 @@ const getUser = async (req: Request, res: Response) => {
 }
 
 const updateUser = async (req: Request, res: Response) => {
-  const { name, email, password, phone } = req.body;
-
+  const { name, email, password, phone,role } = req.body;
+  const userId = req.params.userId;
+  const currentUser = req.user as {id:string;role:string}
+console.log("CURRENT USER IN UPDATE ===>", currentUser);
+  console.log("PARAM USER ID ===>", userId);
   try {
-    const result = await UserServices.UpdateUser(name, email, password, phone,req.params.userId! )
+
+    if(currentUser.role!=="admin" && currentUser.id!==userId){
+      return res.status(403).json({
+        success: false,
+        message: "You can update your profile only"
+      });
+    }
+
+
+    const result = await UserServices.UpdateUser(name, email, password, phone,role,req.params.userId! )
+
+
 
     if (result.rows.length == 0) {
       res.status(404).json({
@@ -60,6 +74,7 @@ const updateUser = async (req: Request, res: Response) => {
     });
   }
 }
+
 
 const deleteUser = async (req: Request, res: Response) => {
   try {
