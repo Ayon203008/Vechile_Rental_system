@@ -1,6 +1,9 @@
 import { pool } from "../../config/db";
 
+import bcrypt from "bcryptjs";
+
 const Createuser = async (name:string, email:string, password:string, phone:string, role:string) => {
+  const hashedpassword = await bcrypt.hash(password,10)
   const result = await pool.query(
     `INSERT INTO users( name,
         email,
@@ -8,20 +11,16 @@ const Createuser = async (name:string, email:string, password:string, phone:stri
         phone,role)
             VALUES ($1,$2,$3,$4,$5)
             `,
-    [name, email, password, phone, role]
+    [name, email, hashedpassword, phone, role]
   );
   return result
 };
-
 
 
 const GetUser=async()=>{
     const result = await pool.query(`SELECT * FROM users`);
     return result
 }
-
-
-
 
 const UpdateUser = async(name:string, email:string, password:string, phone:string,userId:string)=>{
 const result = await pool.query(
@@ -31,8 +30,6 @@ const result = await pool.query(
     return result
 }
 
-
-
 const DeleteUser =async(userId:string)=>{
 
  const result = await pool.query(`DELETE FROM users WHERE id=$1 `, [
@@ -40,7 +37,6 @@ const DeleteUser =async(userId:string)=>{
     ]);
     return result
 }
-
 
 export const  UserServices ={
     Createuser,

@@ -5,6 +5,4 @@ const router = express.Router()
 
 // router.post("/")
 
-
-
 export const BookingRoutes = router

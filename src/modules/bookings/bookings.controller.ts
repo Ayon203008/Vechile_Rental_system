@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { pool } from "../../config/db";
 
-const createBooking =  async (req: Request, res: Response) => {
+const createBooking = async (req: Request, res: Response) => {
   const { vehicle_id, rent_start_date, rent_end_date } = req.body;
   try {
     const result = await pool.query(
@@ -58,7 +58,7 @@ const createBooking =  async (req: Request, res: Response) => {
       message: err.message,
     });
   }
-}
+};
 
 const GetBooking = async (req: Request, res: Response) => {
   try {
@@ -75,9 +75,21 @@ const GetBooking = async (req: Request, res: Response) => {
       message: err.message,
     });
   }
-}
+};
+
+// const UpdateBooking = async () => {
+//   try {
+    
+
+//   }catch (err: any) {
+//     res.status(500).json({
+//       success: false,
+//       message: err.message,
+//     });
+//   }
+// };
 
 export const bookingController = {
-    createBooking,
-    GetBooking
-}
+  createBooking,
+  GetBooking,
+};
